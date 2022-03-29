@@ -1,3 +1,4 @@
+import Notiflix from 'notiflix';
 const form = document.querySelector('.form');
 
 form.addEventListener('submit', onSubmit);
@@ -33,10 +34,10 @@ function onCall(positionArg, delayArg) {
     // console.log(positionArg, delayArg);
     createPromise(positionArg, delayArg)
       .then(({ position, delay }) => {
-        console.log(`This is a FULFILL of promise #${position} with ${delay}ms delay`);
+        Notiflix.Notify.success(`This is a FULFILL of promise #${position} with ${delay}ms delay`);
       })
       .catch(({ position, delay }) => {
-        console.log(`This is a REJECT of promise #${position} with ${delay}ms delay`);
+        Notiflix.Notify.failure(`This is a REJECT of promise #${position} with ${delay}ms delay`);
       });
   }, delayArg);
 }

@@ -1,6 +1,7 @@
 import flatpickr from 'flatpickr';
 // Дополнительный импорт стилей
 import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -22,6 +23,8 @@ function convertMs(ms) {
 }
 
 const refs = {
+  timer: document.querySelector('.timer'),
+  field: document.querySelectorAll('.field'),
   input: document.querySelector('input#datetime-picker'),
   start: document.querySelector('button[data-start]'),
   days: document.querySelector('span[data-days]'),
@@ -34,17 +37,13 @@ refs.start.setAttribute('disabled', 'disabled');
 
 let intId = null;
 
-// localStorage.setItem('selectedTime', null);
-
-// const currentTime = new Date();
-
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0].getTime());
+    // console.log(selectedDates[0].getTime());
 
     const currentTime = Date.now();
 
@@ -54,7 +53,7 @@ const options = {
       return;
     }
 
-    alert('Please choose a date in the future');
+    Notiflix.Notify.failure('Please choose a date in the future');
   },
 
   onOpen() {
@@ -80,12 +79,31 @@ refs.start.addEventListener('click', onStart);
 
 function onStart() {
   refs.start.setAttribute('disabled', 'disabled');
+  refs.timer.classList.add('timer-cls');
+  refs.days.style.fontSize = '50px';
+  refs.hours.style.fontSize = '50px';
+  refs.minutes.style.fontSize = '50px';
+  refs.seconds.style.fontSize = '50px';
+
+  refs.field.forEach(e => {
+    e.classList.add('field-add');
+  });
+
   const endTime = Number(sessionStorage.getItem('selectedTime'));
+
+  intId = setInterval(onMath, 1000);
 
   function onMath() {
     let result = endTime - Date.now();
-    // console.log(convertMs(result));
-    const x = convertMs(result);
+
+    if (result <= 0) {
+      clearInterval(intId);
+      refs.days.textContent = '00';
+      refs.hours.textContent = '00';
+      refs.minutes.textContent = '00';
+      refs.seconds.textContent = '00';
+      return;
+    }
 
     function addLeadingZero(value) {
       return String(value).padStart(2, 0);
@@ -98,19 +116,6 @@ function onStart() {
       refs.seconds.textContent = addLeadingZero(seconds);
     }
 
-    drawMarkup(x);
+    drawMarkup(convertMs(result));
   }
-
-  intId = setInterval(onMath, 1000);
 }
-
-// function onChangeTime() {
-//   const endTime = Number(sessionStorage.getItem('selectedTime'));
-
-//   function onMath() {
-//     console.log(endTime - Date.now());
-//     return endTime - Date.now();
-//   }
-
-//   const intId = setInterval(onMath, 1000);
-// }

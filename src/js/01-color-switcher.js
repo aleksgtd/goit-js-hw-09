@@ -15,6 +15,8 @@ const refs = {
   stop: document.querySelector('button[data-stop]'),
 };
 
+onLoading();
+
 refs.stop.setAttribute('disabled', 'disabled');
 
 refs.start.addEventListener('click', onStart);
@@ -36,4 +38,9 @@ function onStop() {
 
 function onBodyColorChange() {
   document.body.style.backgroundColor = getRandomHexColor();
+}
+
+function onLoading() {
+  refs.start.classList.add('btn-cls');
+  refs.stop.classList.add('btn-cls');
 }
