@@ -85,6 +85,8 @@ function onStart() {
   refs.minutes.style.fontSize = '50px';
   refs.seconds.style.fontSize = '50px';
 
+  refs.input.setAttribute('disabled', 'disabled');
+
   refs.field.forEach(e => {
     e.classList.add('field-add');
   });
